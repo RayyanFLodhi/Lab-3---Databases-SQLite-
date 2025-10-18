@@ -52,8 +52,31 @@ public class MyDBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void findProduct() {
+    public Cursor findProduct(String productName, String productPrice) {
+        SQLiteDatabase db = this.getReadableDatabase();
 
+        String query = "SELECT * FROM " + TABLE_NAME +
+                " WHERE " + COLUMN_PRODUCT_NAME + " LIKE ? AND " + COLUMN_PRODUCT_PRICE + " = ?";
+
+        String[] args = { productName + "%", productPrice };
+        return db.rawQuery(query, args);
+    }
+
+    public Cursor findProductByName(String productName) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "SELECT * FROM " + TABLE_NAME +
+                " WHERE " + COLUMN_PRODUCT_NAME + " LIKE ?";
+
+        String[] args = { productName + "%"};
+        return db.rawQuery(query, args);
+    }
+
+    public Cursor findProductByPrice(String productPrice) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE productPrice=" + productPrice;
+        return db.rawQuery(query, null);
     }
 
     public void deleteProduct(String productName) {
