@@ -21,7 +21,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String create_table_cmd = "CREATE TABLE " + TABLE_NAME +
-                "(" + COLUMN_ID + "INTEGER PRIMARY KEY, " +
+                "(" + COLUMN_ID + " INTEGER PRIMARY KEY, " +
                 COLUMN_PRODUCT_NAME + " TEXT, " +
                 COLUMN_PRODUCT_PRICE + " DOUBLE " + ")";
 
@@ -74,16 +74,19 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
     public Cursor findProductByPrice(String productPrice) {
         SQLiteDatabase db = this.getReadableDatabase();
-
-        String query = "SELECT * FROM " + TABLE_NAME + " WHERE productPrice=" + productPrice;
-        return db.rawQuery(query, null);
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_PRODUCT_PRICE + " = ?";
+        String[] args = { productPrice };
+        return db.rawQuery(query, args);
     }
 
     public void deleteProduct(String productName) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String selection = COLUMN_PRODUCT_NAME + " = ?";
-        String[] selectionArgs = {productName};
+
+        String selection = COLUMN_PRODUCT_NAME + " = ? COLLATE NOCASE";
+        String[] selectionArgs = { productName };
+
         db.delete(TABLE_NAME, selection, selectionArgs);
         db.close();
     }
+
 }
